@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P4 English • Subject–Verb Agreement</title>
+<style>
+:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#172b45;background:#f2f6fc;line-height:1.6}
+*{box-sizing:border-box}body{margin:0}main{max-width:850px;margin:auto;padding:32px 18px 60px}
+header{background:#173c66;color:white;padding:30px;border-radius:20px}h1{line-height:1.2;margin:10px 0;font-size:clamp(1.8rem,5vw,2.5rem)}header p{margin:8px 0}.tag{color:#c7e7ff;font-weight:700;letter-spacing:.08em;font-size:.85rem}
+.details{display:flex;gap:16px;flex-wrap:wrap;margin:24px 0}.details label{flex:1;min-width:180px}input[type=text]{font:inherit;padding:10px 12px;border:1px solid #8295ad;border-radius:8px;width:100%;background:white;color:inherit}
+section{margin-top:28px}h2{font-size:1.3rem;margin-bottom:4px}.instruction{margin-top:0;color:#405570}
+.question{background:white;padding:20px;margin:14px 0;border:1px solid #d3deed;border-radius:12px}fieldset{min-width:0}legend{font-weight:650;padding:0 4px}.options{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}.option{border:1px solid #bac9dd;border-radius:8px;padding:9px 18px;cursor:pointer}.option:has(input:checked){background:#e4efff;border-color:#2461aa}input[type=radio]{accent-color:#2461aa}
+.question>label{display:block;font-weight:650;margin-bottom:12px}.feedback{margin:12px 0 0}.correct{border-left:5px solid #197348}.incorrect{border-left:5px solid #b53636}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}button{font:inherit;font-weight:700;border:0;border-radius:9px;padding:13px 22px;cursor:pointer;background:#215da5;color:white}button.secondary{background:#e0e8f4;color:#173c66}button:hover{filter:brightness(.94)}:focus-visible{outline:3px solid #c27900;outline-offset:4px}
+#result{margin-top:24px;padding:22px;background:#e3efff;border-radius:12px}#result h2{margin-top:0}#progress{font-weight:600;color:#405570}footer{margin-top:26px;color:#50627a;font-size:.9rem}[hidden]{display:none!important}
+@media print{body{background:white}header{background:white;color:#172b45;padding:0}.tag{color:inherit}.actions,#progress,footer{display:none}.question{break-inside:avoid}main{padding:0}}
+</style>
+</head>
+<body>
+<main>
+<header><div class="tag">PRIMARY 4 ENGLISH</div><h1>Subject–Verb Agreement</h1><p>20 questions · 20 marks</p><p>Choose your answers, complete the sentences, then check your work.</p></header>
+<noscript><p>This quiz needs JavaScript enabled for the questions and automatic marking.</p></noscript>
+<form id="quiz">
+<div class="details"><label>Name (optional)<input type="text" name="studentName" autocomplete="off"></label><label>Class (optional)<input type="text" name="studentClass" autocomplete="off"></label></div>
+<p id="progress">0 of 20 questions answered</p>
+<div id="sections"></div>
+<div class="actions"><button type="submit">Check my answers</button><button class="secondary" type="reset">Try again</button></div>
+</form>
+<div id="result" role="status" aria-live="polite" tabindex="-1" hidden></div>
+<footer>Your answers stay on this page and are not sent anywhere. You can also print this page from your browser.</footer>
+</main>
+<script>
+"use strict";
+const questions = [["My sister ___ to school every morning.",["walk","walks"],"walks","My sister is singular."],["The boys ___ football during recess.",["play","plays"],"play","The boys is plural."],["Each pupil ___ a storybook.",["has","have"],"has","Each pupil takes a singular verb."],["The basket of apples ___ on the table.",["is","are"],"is","The subject is the singular noun basket."],["Tom and Jerry ___ reading comics.",["enjoy","enjoys"],"enjoy","Two subjects joined by and take a plural verb."],["One of the dogs ___ loudly at strangers.",["bark","barks"],"barks","The subject is one, which is singular."],["There ___ three pencils in the box.",["is","are"],"are","Three pencils is plural."],["Everyone ___ to join the game.",["want","wants"],"wants","Everyone takes a singular verb."],["You ___ very helpful yesterday.",["was","were"],"were","Use were with you in the past tense."],["The children ___ their homework after dinner.",["do","does"],"do","Children is plural."],["Mrs Tan ___ us English every Monday. (teach)",null,"teaches","Mrs Tan is singular, so use teaches."],["The birds ___ over the playground every morning. (fly)",null,"fly","Birds is plural, so use fly."],["My brother ___ not like spicy food. (do)",null,"does","My brother is singular, so use does."],["Both girls ___ ready for the competition. (be)",null,"are","Both girls is plural."],["The girl with two ribbons ___ beautifully. (sing)",null,"sings","The subject is the singular noun girl."],["These books belongs to the school library.",null,"These books belong to the school library.","Books is plural, so use belong."],["Nobody know the answer.",null,"Nobody knows the answer.","Nobody takes a singular verb."],["My father and mother is at home.",null,"My father and mother are at home.","Two subjects joined by and take are."],["The box of toys are under the bed.",null,"The box of toys is under the bed.","The subject is the singular noun box."],["She have a new schoolbag.",null,"She has a new schoolbag.","Use has with she."]];
+const form = document.getElementById("quiz");
+const sections = document.getElementById("sections");
+const result = document.getElementById("result");
+const groups = [
+["A. Choose the correct verb","Select one answer for each question. Each question carries 1 mark.",0,10],
+["B. Fill in the blanks","Use the simple present tense of the verb in brackets. Each question carries 1 mark.",10,15],
+["C. Correct the sentences","Rewrite the whole sentence using the correct verb. Each question carries 1 mark.",15,20]
+];
+groups.forEach(([title,instruction,start,end]) => {
+ const section=document.createElement("section");
+ const heading=document.createElement("h2");heading.textContent=title;section.append(heading);
+ const note=document.createElement("p");note.className="instruction";note.textContent=instruction;section.append(note);
+ for(let i=start;i<end;i++){
+  const [prompt,options]=questions[i];
+  const card=document.createElement(options?"fieldset":"div");card.className="question";card.id="card"+i;
+  const label=document.createElement(options?"legend":"label");label.textContent=(i+1)+". "+prompt;
+  if(!options)label.htmlFor="q"+i;
+  card.append(label);
+  if(options){
+   const choices=document.createElement("div");choices.className="options";
+   options.forEach(value=>{
+    const choice=document.createElement("label");choice.className="option";
+    const input=document.createElement("input");input.type="radio";input.name="q"+i;input.value=value;
+    choice.append(input,document.createTextNode(" "+value));choices.append(choice);
+   });card.append(choices);
+  }else{
+   const input=document.createElement("input");input.type="text";input.id="q"+i;input.name="q"+i;input.autocomplete="off";input.spellcheck=false;card.append(input);
+  }
+  const feedback=document.createElement("p");feedback.className="feedback";feedback.id="feedback"+i;feedback.hidden=true;card.append(feedback);
+  card.querySelectorAll("input").forEach(input=>input.setAttribute("aria-describedby",feedback.id));
+  section.append(card);
+ }
+ sections.append(section);
+});
+function normalise(value){return value.trim().toLowerCase().replace(/[.!?]+$/,"").trim().replace(/\s+/g," ");}
+function answer(i){return new FormData(form).get("q"+i)||"";}
+function clearMarking(){
+ result.hidden=true;
+ questions.forEach((_,i)=>{document.getElementById("card"+i).classList.remove("correct","incorrect");document.getElementById("feedback"+i).hidden=true;});
+}
+function progress(){
+ const count=questions.filter((_,i)=>answer(i).trim()).length;
+ document.getElementById("progress").textContent=count+" of 20 questions answered";
+}
+form.addEventListener("input",()=>{clearMarking();progress();});
+form.addEventListener("submit",event=>{
+ event.preventDefault();
+ let score=0,unanswered=0;
+ questions.forEach((q,i)=>{
+  const value=answer(i);const correct=normalise(value)===normalise(q[2]);
+  if(correct)score++;if(!value.trim())unanswered++;
+  const card=document.getElementById("card"+i);card.classList.remove("correct","incorrect");card.classList.add(correct?"correct":"incorrect");
+  const feedback=document.getElementById("feedback"+i);feedback.hidden=false;
+  feedback.textContent=(correct?"Correct! ":""+(value.trim()?"Not quite. ":"Not answered. ")+"Answer: "+q[2]+" ")+q[3];
+ });
+ result.replaceChildren();
+ const heading=document.createElement("h2");heading.textContent="Your score: "+score+" / 20";result.append(heading);
+ const message=document.createElement("p");message.textContent=(score===20?"Excellent work! You got every answer correct.":score>=15?"Good work! Read the feedback to learn from your mistakes.":"Keep practising! Read each explanation, then try again.")+(unanswered?" You left "+unanswered+" question"+(unanswered===1?"":"s")+" unanswered.":"");result.append(message);
+ result.hidden=false;result.focus();
+});
+form.addEventListener("reset",()=>{clearMarking();document.getElementById("progress").textContent="0 of 20 questions answered";});
+</script>
+</body>
+</html>
